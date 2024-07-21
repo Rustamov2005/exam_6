@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+                        <div id="tab-1" class="tab-pane fade show p-0 active">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <div class="row g-4">
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="col-lg-4 text-start">
+                                                <h1>Sabzavotlar</h1>
+                                            </div>
+                                            {% for frute in allproducts %}
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <img src="{{ frute.img.url }}" class="img-fluid w-100 rounded-top" alt="">
+                                                    </div>
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>{{ frute.title }}</h4>
+                                                        <p>{{ frute.description }}</p>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">${{ frute.price }} / kg</p>
+                                                            <p class="text-dark fs-5 fw-bold mb-0">vegetables</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="col-lg-4 text-start">
+                                                <h1>Go'sht maxsulotlari</h1>
+                                            </div>
+                                            {% for me in meat %}
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <img src="{{ me.img.url }}" class="img-fluid w-100 rounded-top" alt="">
+                                                    </div>
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>{{ me.title }}</h4>
+                                                        <p>{{ me.description }}</p>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">${{ me.price }}/ kg</p>
+                                                            <p class="text-dark fs-5 fw-bold mb-0">Meat</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="col-lg-4 text-start">
+                                                <h1>Mevalar</h1>
+                                            </div>
+                                            {% for fruet in fruits %}
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <img src="{{ fruet.img.url }}" class="img-fluid w-100 rounded-top" alt="">
+                                                    </div>
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>{{ fruet.title }}</h4>
+                                                        <p>{{ fruet.description }}</p>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">${{ fruet.price }}/ kg</p>
+                                                            <p class="text-dark fs-5 fw-bold mb-0">Fruits</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="col-lg-4 text-start">
+                                                <h1>Non maxsulatlari</h1>
+                                            </div>
+                                            {% for bread in breads %}
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <img src="{{ bread.img.url }}" class="img-fluid w-100 rounded-top" alt="">
+                                                    </div>
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                        <h4>{{ bread.title }}</h4>
+                                                        <p>{{ bread.description }}</p>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">${{ bread.price }} / dona</p>
+                                                            <p class="text-dark fs-5 fw-bold mb-0">Breads</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+
