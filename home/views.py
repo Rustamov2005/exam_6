@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def home(request):
     fruites = Fruits.objects.all()
     if request.method == 'POST':
@@ -23,6 +25,7 @@ def home(request):
     return render(request, 'index.html', {'fruites': fruites, 'freeproduct': freeproduct, 'organganic': organganic})
 
 
+@login_required
 def users(request):
     users = Users.objects.all()
     return render(request, 'users.html', {'users': users})
