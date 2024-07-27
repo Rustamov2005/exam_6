@@ -1,74 +1,80 @@
-from django.shortcuts import render, redirect
-from products.models import Fruits, Freeproducts, Organicvegetables
-from .models import Users
+from django.contrib.auth.views import LogoutView
+from django.views.generic.edit import FormView
 from django.contrib.auth.models import User
+from .forms import RegisterForm
+from django.contrib.auth.views import LoginView
 from django.contrib import messages
-from django.utils.datastructures import MultiValueDictKeyError
-from django.contrib import auth
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+from home.models import Fruits, Freeproducts, Organicvegetables
 
 
-@login_required
-def home(request):
-    fruites = Fruits.objects.all()
-    if request.method == 'POST':
-        search_query = request.POST.get('search', '')
-        if search_query:
-            organ = Fruits.objects.filter(name__icontains=search_query)
-            if organ.exists():
-                return render(request, 'index.html',
-                              {'fruites': fruites, 'organ': organ, 'message': 'Successfully found'})
-            else:
-                return render(request, 'index.html', {'fruites': fruites, 'organ': organ, 'message': 'Not found'})
-    freeproduct = Freeproducts.objects.all()
-    organganic = Organicvegetables.objects.all()
-    return render(request, 'index.html', {'fruites': fruites, 'freeproduct': freeproduct, 'organganic': organganic})
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+    login_url = '/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['fruites'] = Fruits.objects.all()
+        context['freeproduct'] = Freeproducts.objects.all()
+        context['organganic'] = Organicvegetables.objects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        search = request.POST.get("search", "")
+        shopp = Fruits.objects.filter(title__icontains=search)
+        context = self.get_context_data()
+        context['shopp'] = shopp
+        return render(request, self.template_name, context)
 
 
-@login_required
-def users(request):
-    users = Users.objects.all()
-    return render(request, 'users.html', {'users': users})
+class UsersListView(ListView):
+    model = Users
+    template_name = 'users.html'
+    context_object_name = 'users'
 
 
-def login(request):
-    if request.method == 'POST':
-        try:
-            username = request.POST['username']
-            password1 = request.POST['password1']
-        except MultiValueDictKeyError:
-            messages.info(request, 'Please provide both username and password')
-            return redirect('home')
-        user = auth.authenticate(username=username, password=password1)
-        if user is not None:
-            auth.login(request, user)
-            return redirect('home')
-        else:
-            messages.info(request, 'Invalid credentials')
-            return redirect('login')
-    else:
-        return render(request, 'auth/login.html')
+class CustomLoginView(LoginView):
+    template_name = 'auth/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        if user:
+            messages.success(self.request, 'Logged in successfully')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Login failed. Please check your username and password.')
+        return super().form_invalid(form)
 
 
-def register(request):
-    if request.method == 'POST':
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        email = request.POST['email']
-        if password1 == password2:
-            if User.objects.filter(username=username).exists():
-                messages.info(request, 'Username Taken')
-                return redirect('register')
-            else:
-                user = User.objects.create_user(username=username, password=password1, email=email,  first_name=first_name,  last_name=last_name)
-                user.save()
-                print('user created')
-                return redirect('login')
-        else:
-            messages.info(request, "Password don't match!")
-            return redirect('register')
-    else:
-        return render(request, "auth/regester.html")
+class RegisterView(FormView):
+    template_name = 'auth/register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            form.add_error('username', 'Username Taken')
+            return self.form_invalid(form)
+
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data['password1'])
+        user.save()
+        messages.success(self.request, 'User created successfully')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Password don't match or username already taken!")
+        return super().form_invalid(form)
+
+
+class CustomLogoutView(LogoutView):
+    next_page = 'login'
+
+
+
+

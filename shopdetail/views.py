@@ -1,14 +1,13 @@
-from django.shortcuts import render
-from shop.models import Shopvegetable
-from .models import Maxsulot, Related
-from home.models import Comments
-from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
+from .models import Shopvegetable, Maxsulot, Related, Comments
 
+class ShopDetailView(TemplateView):
+    template_name = 'shop-detail.html'
 
-@login_required
-def shopdetail(request):
-    shopdetail = Shopvegetable.objects.all()
-    maxsulot = Maxsulot.objects.all()
-    related = Related.objects.all()
-    comments = Comments.objects.all()
-    return render(request, 'shop-detail.html', {'shopdetail': shopdetail, 'maxsulot': maxsulot, 'related': related, 'comments': comments})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shopdetail'] = Shopvegetable.objects.all()
+        context['maxsulot'] = Maxsulot.objects.all()
+        context['related'] = Related.objects.all()
+        context['comments'] = Comments.objects.all()
+        return context

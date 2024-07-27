@@ -1,0 +1,7 @@
+<!-- cards_form.html -->
+<h2>{% if form.instance.pk %}Update{% else %}Create{% endif %} Card</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+</form>
